@@ -144,8 +144,10 @@ void RenderFrame()
 {
 	D3DCOLOR bgColour = 0xFF0000FF;	// 배경색상 - 파랑
 
+    // 화면을 색상으로 채움. 결과적으로 화2면을 지우는 효과
     gpD3DDevice->Clear( 0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), bgColour, 1.0f, 0 );
 
+    // 장면 그리기
     gpD3DDevice->BeginScene();
     {
 		RenderScene();				// 3D 물체등을 그린다.
@@ -153,6 +155,7 @@ void RenderFrame()
     }
 	gpD3DDevice->EndScene();
 
+    // 백버퍼에 저장되어 있는 렌더링 결과를 화면에 출력
     gpD3DDevice->Present( NULL, NULL, NULL, NULL );
 }
 
@@ -222,20 +225,20 @@ bool InitD3D(HWND hWnd)
     D3DPRESENT_PARAMETERS d3dpp;
     ZeroMemory( &d3dpp, sizeof(d3dpp) );
 
-	d3dpp.BackBufferWidth				= WIN_WIDTH;
-	d3dpp.BackBufferHeight				= WIN_HEIGHT;
-	d3dpp.BackBufferFormat				= D3DFMT_X8R8G8B8;
+	d3dpp.BackBufferWidth				= WIN_WIDTH; // 백버퍼의 너비
+	d3dpp.BackBufferHeight				= WIN_HEIGHT; // 백버퍼의 높이
+	d3dpp.BackBufferFormat				= D3DFMT_X8R8G8B8; // 백버퍼의 포맷
     d3dpp.BackBufferCount				= 1;
     d3dpp.MultiSampleType				= D3DMULTISAMPLE_NONE;
     d3dpp.MultiSampleQuality			= 0;
-    d3dpp.SwapEffect					= D3DSWAPEFFECT_DISCARD;
+    d3dpp.SwapEffect					= D3DSWAPEFFECT_DISCARD; // 백버퍼를 Swap할 때의 효과. 성능상 D3DSWAPEFFECT_DISCARD 사용. 
     d3dpp.hDeviceWindow					= hWnd;
     d3dpp.Windowed						= TRUE;
     d3dpp.EnableAutoDepthStencil		= TRUE;
-    d3dpp.AutoDepthStencilFormat		= D3DFMT_D24X8;
+    d3dpp.AutoDepthStencilFormat		= D3DFMT_D24X8; // 깊이/스텐실 버퍼의 포맷
     d3dpp.Flags							= D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
     d3dpp.FullScreen_RefreshRateInHz	= 0;
-    d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_ONE;
+    d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_ONE; // 모니터 주사율과 백버퍼를 스왑하는 빈도간의 관계. D3DPRESENT_INTERVAL_ONE == 모니터가 동기될 때마다 백버퍼를 스왑. 이 때 Tearing 현상 발생.
 
     // D3D장치를 생성한다.
     if( FAILED( gpD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
@@ -260,6 +263,8 @@ bool LoadAssets()
 }
 
 // 쉐이더 로딩
+// .fx 포맷으로 저장된 쉐이더 파일을 불러옴
+// .fx : 정점쉐이더와 픽셀쉐이더를 모두 포함
 LPD3DXEFFECT LoadShader(const char * filename )
 {
 	LPD3DXEFFECT ret = NULL;
@@ -271,6 +276,7 @@ LPD3DXEFFECT LoadShader(const char * filename )
 	dwShaderFlags |= D3DXSHADER_DEBUG;
 #endif
 
+    // .fx 파일을 로딩 및 컴파일
 	D3DXCreateEffectFromFile(gpD3DDevice, filename,
 		NULL, NULL, dwShaderFlags, NULL, &ret, &pError);
 
@@ -294,10 +300,12 @@ LPD3DXEFFECT LoadShader(const char * filename )
 }
 
 // 모델 로딩
+// .x 파일 로딩
+// .x : DirectX에서 자체적으로 지원하는 메쉬 포맷
 LPD3DXMESH LoadModel(const char * filename)
 {
 	LPD3DXMESH ret = NULL;
-	if ( FAILED(D3DXLoadMeshFromX(filename,D3DXMESH_SYSTEMMEM, gpD3DDevice, NULL,NULL,NULL,NULL, &ret)) )
+	if ( FAILED(D3DXLoadMeshFromX(filename, D3DXMESH_SYSTEMMEM, gpD3DDevice, NULL,NULL,NULL,NULL, &ret)) )
 	{
 		OutputDebugString("모델 로딩 실패: ");
 		OutputDebugString(filename);
@@ -310,6 +318,7 @@ LPD3DXMESH LoadModel(const char * filename)
 // 텍스처 로딩
 LPDIRECT3DTEXTURE9 LoadTexture(const char * filename)
 {
+    // 다양한 포맷으로 저장된 이미지들을 텍스처로 로딩
 	LPDIRECT3DTEXTURE9 ret = NULL;
 	if ( FAILED(D3DXCreateTextureFromFile(gpD3DDevice, filename, &ret)) )
 	{
