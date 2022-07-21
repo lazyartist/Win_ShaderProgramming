@@ -170,6 +170,42 @@ void RenderFrame()
 // 3D 물체등을 그린다.
 void RenderScene()
 {
+    // 뷰행렬 만들기
+    D3DXMATRIXA16 matView;
+    D3DXVECTOR3 vEyePt(0.0f, 0.0f, -200.0f);
+    D3DXVECTOR3 vLookAtPt(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);
+    D3DXMatrixLookAtLH(&matView, &vEyePt, &vLookAtPt, &vUpVec);
+
+    // 투영행렬 만들기
+    D3DXMATRIXA16 matProjection;
+    D3DXMatrixPerspectiveFovLH(&matProjection, FOV, ASPECT_RATIO, NEAR_PLANE, FAR_PLANE);
+
+    // 월드행렬 만들기
+    D3DXMATRIXA16 matWorld;
+    D3DXMatrixIdentity(&matWorld);
+
+    // 쉐이더 전역변수 설정
+    gpColorShader->SetMatrix("gWorldMatrix", &matWorld);
+    gpColorShader->SetMatrix("gViewMatrix", &matView);
+    gpColorShader->SetMatrix("gProjectionMatrix", &matProjection);
+
+    // 쉐이더 시작
+    // todo #here 1프레임만 빨간 원이 그려지고 사라지는 문제 있음. 예제는 잘 돌아가므로 비교해서 수정필요.
+    UINT numPasses = 0;// 쉐이더 패스 수, 패스는 다양한 쉐이더를 이용하여 동일한 물체를 여러 번 그릴 때 사용. 거의 1값임. 패스 한개는 정점, 픽셀 쉐이더 쌍 하나를 의미. 
+    gpColorShader->Begin(&numPasses, NULL); // 쉐이더 안에 있는 패스의 수를 구해온다.
+    for (UINT i = 0; i < numPasses; ++i)
+    {
+        // 드로우 콜을 감소시켜야 한다는 말이 아래 코드 호출을 줄인하는 뜻인가?
+        // 추측 : 여러 객체가 하나의 쉐이더를 공유하면 BeginPass 한 번에 DrawSubset을 여러개 처리할 수 있다.
+        // 아니면 Begin() 한 번에 여러 객체인가?
+        // 나중에 좀 더 알게 되면 수정할 것!
+        gpColorShader->BeginPass(i); // 사용할 쉐이더 설정(몇 번째 패스 사용할지도 함께 설정) 
+        gpSphere->DrawSubset(0); // 실제 물체를 그림. 위에 지정한 쉐이더로 그려진다.
+        gpColorShader->End();
+    }
+    gpColorShader->End();
+    
 }
 
 // 디버그 정보 등을 출력.
@@ -360,8 +396,18 @@ void Cleanup()
 	}
 
 	// 모델을 release 한다.
-
+    if(gpSphere)
+    {
+        gpSphere->Release();
+        gpSphere = nullptr;
+    }
+    
 	// 쉐이더를 release 한다.
+    if(gpColorShader)
+    {
+        gpColorShader->Release();
+        gpColorShader = nullptr;
+    }
 
 	// 텍스처를 release 한다.
 
