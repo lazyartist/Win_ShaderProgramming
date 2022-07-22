@@ -202,10 +202,9 @@ void RenderScene()
         // 나중에 좀 더 알게 되면 수정할 것!
         gpColorShader->BeginPass(i); // 사용할 쉐이더 설정(몇 번째 패스 사용할지도 함께 설정) 
         gpSphere->DrawSubset(0); // 실제 물체를 그림. 위에 지정한 쉐이더로 그려진다.
-        gpColorShader->End();
+        gpColorShader->EndPass();
     }
     gpColorShader->End();
-    
 }
 
 // 디버그 정보 등을 출력.
