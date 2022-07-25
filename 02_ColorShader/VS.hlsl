@@ -4,7 +4,7 @@ float4x4 gProjectionMatrix;
 
 struct VS_INPUT
 {
-   float4 mPosition : POSITION;
+   float4 mPosition : POSITION; // 여기에서 세미콜론 없으면 에러.
 }; // 세미콜론 없으면 "syntax error: unexpected token 'struct'" 에러 난다.
 
 struct VS_OUTPUT
