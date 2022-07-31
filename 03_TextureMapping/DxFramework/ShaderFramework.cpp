@@ -18,6 +18,9 @@
 // 전역변수
 //----------------------------------------------------------------------
 
+#define PI 3.14159265f
+#define FOV PI/4.f
+
 // D3D 관련
 LPDIRECT3D9             gpD3D			= NULL;				// D3D
 LPDIRECT3DDEVICE9       gpD3DDevice		= NULL;				// D3D 장치
@@ -33,6 +36,9 @@ LPD3DXEFFECT gpTextureMappingShader = NULL;
 
 // 텍스처
 LPDIRECT3DTEXTURE9 gpEarthDM = NULL; // DiffuseMap
+
+// 회전값
+float gRotationY = 0.f;
 
 // 프로그램 이름
 const char*				gAppName		= "Super Simple Shader Demo Framework";
@@ -137,6 +143,11 @@ void PlayDemo()
 // 게임로직 업데이트
 void Update()
 {
+    gRotationY += 1.f * PI / 180.f; // 회전각(Degee) 설정
+    if(PI * 2.f < gRotationY)
+    {
+        gRotationY -= PI * 2.f; // 360도 이상이면 360만큼 빼서 계속 돌 수 있게 한다.
+    }
 }
 
 //------------------------------------------------------------
@@ -168,13 +179,22 @@ void RenderScene()
 {
     // matrix
     D3DXMATRIX matWorld;
+    D3DXMatrixRotationY(&matWorld, gRotationY);
+    
     D3DXMATRIX matView;
+    D3DXVECTOR3 vEyePt = {0.f, -1.f, -200.f};
+    D3DXVECTOR3 vLookAtPt = {0.f, 0.f, 0.f};
+    D3DXVECTOR3 vUpVec = {0.f, 1.f, 0.f};
+    D3DXMatrixLookAtLH(&matView, &vEyePt, &vLookAtPt, &vUpVec);
+    
     D3DXMATRIX matProjection;
+    D3DXMatrixPerspectiveFovLH(&matProjection, FOV, static_cast<float>(WIN_WIDTH)/static_cast<float>(WIN_HEIGHT), 1.f, 10000.f);
 
     // shader
     gpTextureMappingShader->SetMatrix("gWorldMatrix", &matWorld);
     gpTextureMappingShader->SetMatrix("gViewMatrix", &matView);
     gpTextureMappingShader->SetMatrix("gProjectionMatrix", &matProjection);
+    gpTextureMappingShader->SetTexture("DiffuseMap_Tex", gpEarthDM); // TextureMapping.fx 파일을 열어보면 변수명이 "DiffuseMap_Tex"로 수정되어 있다.
 
     // render
     UINT numPass;
@@ -182,12 +202,10 @@ void RenderScene()
     for (int i = 0; i < numPass; ++i)
     {
         gpTextureMappingShader->BeginPass(i);
-        // gpTextureMappingShader->
+        gpSphere->DrawSubset(0);
         gpTextureMappingShader->EndPass();
     }
     gpTextureMappingShader->End();
-
-    
 }
 
 // 디버그 정보 등을 출력.
