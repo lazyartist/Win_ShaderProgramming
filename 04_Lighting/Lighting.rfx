@@ -1038,6 +1038,9 @@ struct VS_OUTPUT
    float3 mReflection : TEXCOORD3;
 };
 
+// Default Model Orientation of the RenderMonkey is LHS(Left Hand Side) and Forward vector is z.
+// UnrealEngine is LHS too, but forward vector is x.
+
 VS_OUTPUT vs_main(VS_INPUT Input)
 {
    VS_OUTPUT Output;
