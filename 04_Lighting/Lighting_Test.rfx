@@ -993,7 +993,7 @@ Pass 0]]></RmTextDataBlock></RmStringVariable>
     </RmRegistryBranch>
     <RmRegistryBranch NAME="WORKSPACE" API="" XML_VERSION="RenderMonkey 1.71">
      <RmStringVariable NAME="LAST_SAVE" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-16/8/2022 9:5:53]]></RmTextDataBlock></RmStringVariable>
+17/8/2022 8:13:38]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 RenderMonkey Version 1.82 (build 322)]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="XML_VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
@@ -1022,7 +1022,7 @@ float4x4 gWorldMatrix;
 float4x4 gViewMatrix;
 float4x4 gProjectionMatrix;
 
-float3 gWorldLightPosition;
+float4 gWorldLightPosition;
 
 struct VS_INPUT
 {
@@ -1041,12 +1041,18 @@ VS_OUTPUT vs_main(VS_INPUT Input)
    VS_OUTPUT Output;
    
    Output.mPosition = mul(Input.mPosition, gWorldMatrix);
+   
+   // Diffuse
+   float3 lightDir = Output.mPosition - gWorldLightPosition;
+   lightDir = normalize(lightDir);
+   float3 normal = mul(Input.mNormal, gWorldMatrix);
+   normal = normalize(normal);
+   float diffuse = dot(-lightDir, normal);
+   Output.mDiffuse = diffuse;
+   
    Output.mPosition = mul(Output.mPosition, gViewMatrix);
    Output.mPosition = mul(Output.mPosition, gProjectionMatrix);
    
-   float3 lightDir = Input.mPosition - gWorldLightPosition;
-   float diffuse = dot(-lightDir, Input.mNormal);
-   Output.mDiffuse = diffuse;
    
    return Output;
 }]]></RmShaderCode>
@@ -1058,12 +1064,12 @@ VS_OUTPUT vs_main(VS_INPUT Input)
     <RmHLSLShader NAME="Pixel Shader" API="D3D" PIXEL_SHADER="TRUE" TARGET="ps_2_0" ENTRY_POINT="ps_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
 struct PS_INPUT
 {
-   float4 mPosition : POSITION;
    float3 mDiffuse : TEXCOORD1;
 };
 
 float4 ps_main(PS_INPUT Input) : COLOR
 {
+   //return 1.f;
    return float4(Input.mDiffuse, 1.f);
    //return float(Input.mDiffuse.xyz, 1.f);
 }]]></RmShaderCode></RmHLSLShader>
