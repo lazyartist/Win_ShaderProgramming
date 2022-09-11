@@ -35,9 +35,6 @@ LPD3DXEFFECT gpSpecularMappingShader = nullptr;
 LPDIRECT3DTEXTURE9 gpDiffuseMap = nullptr;
 LPDIRECT3DTEXTURE9 gpSpecularMap = nullptr;
 
-// Y 회전값
-FLOAT gWorldRotaionY = 0.F;
-
 // 프로그램 이름
 const char*				gAppName		= "Super Simple Shader Demo Framework";
 // const char*				gAppName		= "초간단 쉐이더 데모 프레임워크";
@@ -141,8 +138,6 @@ void PlayDemo()
 // 게임로직 업데이트
 void Update()
 {
-	gWorldRotaionY += 0.01f;
-	
 }
 
 //------------------------------------------------------------
@@ -168,51 +163,49 @@ void RenderFrame()
     gpD3DDevice->Present( NULL, NULL, NULL, NULL );
 }
 
-
 // 3D 물체등을 그린다.
 void RenderScene()
 {
-	// D3D 좌표계 : 왼손 좌표계, forward == z axis.
-	const D3DXVECTOR4 vecWorldLightPosition = {200.f, 200.f, -100.f, 1.f};
-	const D3DXVECTOR4 vecWorldLightColor = {1.f, 0.f, 0.f, 1.f};
-	const D3DXVECTOR4 vecWorldCameraPosition = {0.f, 0.f, -200.f, 1.f};
+	static float RotationY = 0.f;
+	RotationY += 0.01f;
 	
-	// World Matrix
-	D3DXMATRIX matWorld;
-	// D3DXMatrixIdentity(&matWorld);
-	D3DXMatrixRotationY(&matWorld, gWorldRotaionY);
-	
-	// View Matrix
-	D3DXMATRIX matView;
-	CONST D3DXVECTOR3 vecEye = {vecWorldCameraPosition.x, vecWorldCameraPosition.y, vecWorldCameraPosition.z};
-	CONST D3DXVECTOR3 vecAt = {vecEye.x, vecEye.y, vecEye.z + 1.0f};// Eye 위치에서 앞(Forward)만 바라보게 한다.
-	CONST D3DXVECTOR3 vecUp = {0.f, 1.f, 0.f};
-	D3DXMatrixLookAtLH(&matView, &vecEye, &vecAt, &vecUp);
+	// Matrix - World
+	D3DXMATRIX worldMatrix;
+	// D3DXMatrixIdentity(&worldMatrix);
+	D3DXMatrixRotationY(&worldMatrix, RotationY);
 
-	// Projection Matrix
-	D3DXMATRIX matProjection;
-	// D3DXMatrixPerspectiveLH(&matProjection, WIN_WIDTH, WIN_HEIGHT, 1.f, 10000.f); // 이건 왜 안될까?
-	D3DXMatrixPerspectiveFovLH(&matProjection, 3.14159265f/4.f, WIN_WIDTH/(float)WIN_HEIGHT, 1.F, 10000.F);
+	// Matrix - View
+	D3DXMATRIX viewMatrix;
+	CONST D3DXVECTOR3 vecEye{0.f, 0.f, -200.f};
+	CONST D3DXVECTOR3 vecAt{vecEye.x, vecEye.y, vecEye.z + 1.f};
+	CONST D3DXVECTOR3 vecUp{0.f, 1.f, 0.f};
+	D3DXMatrixLookAtLH(&viewMatrix, &vecEye, &vecAt, &vecUp);
+	
+	// Matrix - Projection
+	D3DXMATRIX projectionMatrix;
+	D3DXMatrixPerspectiveFovLH(&projectionMatrix, 3.14159265f/4.0f, WIN_WIDTH/ static_cast<float>(WIN_HEIGHT), 1.f, 10000.f);
+	
+	// Shader
+	gpSpecularMappingShader->SetMatrix("gWorldMatrix", &worldMatrix);
+	gpSpecularMappingShader->SetMatrix("gViewMatrix", &viewMatrix);
+	gpSpecularMappingShader->SetMatrix("gProjectionMatrix", &projectionMatrix);
 
-	// shader setting
-	gpSpecularMappingShader->SetMatrix("gWorldMatrix", &matWorld);
-	gpSpecularMappingShader->SetMatrix("gViewMatrix", &matView);
-	gpSpecularMappingShader->SetMatrix("gProjectionMatrix", &matProjection);
-	
-	gpSpecularMappingShader->SetVector("gWorldLightPosition", &vecWorldLightPosition);
-	gpSpecularMappingShader->SetVector("gWorldLightColor", &vecWorldLightColor);
-	gpSpecularMappingShader->SetVector("gWorldCameraPosition", &vecWorldCameraPosition);
-	
+	CONST D3DXVECTOR4 WorldCameraPosition = D3DXVECTOR4{vecEye.x, vecEye.y, vecEye.z, 1.f};
+	gpSpecularMappingShader->SetVector("gWorldCameraPosition", &WorldCameraPosition);
+
+	CONST D3DXVECTOR4 WorldLightPosition = D3DXVECTOR4{200.f, 200.f, 0.f, 1.f};
+	gpSpecularMappingShader->SetVector("gWorldLightPosition", &WorldLightPosition);
+
 	gpSpecularMappingShader->SetTexture("DiffuseMap_Tex", gpDiffuseMap);
 	gpSpecularMappingShader->SetTexture("SpecularMap_Tex", gpSpecularMap);
-	
+
 	// Render
 	UINT PassesNum = 0;
 	gpSpecularMappingShader->Begin(&PassesNum, 0);
-	for (UINT i = 0; i < PassesNum; ++i)
+	for (int i = 0; i < PassesNum; ++i)
 	{
 		gpSpecularMappingShader->BeginPass(i);
-		gpSphere->DrawSubset(0);// 쉐이더 설정은 앞으로 그릴 방식에 대한 설정이다. 따라서 실제 그리기는 Mesh에서 한다.
+		gpSphere->DrawSubset(0);
 		gpSpecularMappingShader->EndPass();
 	}
 	gpSpecularMappingShader->End();
@@ -306,9 +299,22 @@ bool InitD3D(HWND hWnd)
 
 bool LoadAssets()
 {
+	// 텍스처 로딩
+	gpDiffuseMap = LoadTexture("../../Resources/Fieldstone_DM.tga");
+	if (nullptr == gpDiffuseMap)
+	{
+		return false;
+	}
+
+	gpSpecularMap = LoadTexture("../../Resources/Fieldstone_SM.tga");
+	if (nullptr == gpSpecularMap)
+	{
+		return false;
+	}
+
 	// 쉐이더 로딩
 	gpSpecularMappingShader = LoadShader("../SpecularMapping.fx");
-	if(nullptr == gpSpecularMappingShader)
+	if (nullptr == gpSpecularMappingShader)
 	{
 		return false;
 	}
@@ -316,19 +322,6 @@ bool LoadAssets()
 	// 모델 로딩
 	gpSphere = LoadModel("../../Resources/Sphere.x");
 	if(nullptr == gpSphere)
-	{
-		return false;
-	}
-
-	// 텍스처 로딩
-	gpDiffuseMap = LoadTexture("../../Resources/Fieldstone_DM.tga");
-	if(nullptr == gpDiffuseMap)
-	{
-		return false;
-	}
-
-	gpSpecularMap = LoadTexture("../../Resources/Fieldstone_SM.tga");
-	if(nullptr == gpSpecularMap)
 	{
 		return false;
 	}

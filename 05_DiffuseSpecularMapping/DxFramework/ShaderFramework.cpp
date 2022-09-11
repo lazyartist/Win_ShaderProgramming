@@ -312,7 +312,7 @@ bool InitD3D(HWND hWnd)
 bool LoadAssets()
 {
 	// 쉐이더 로딩
-    gpSpecularMappingShader = LoadShader("SpecularMapping.fx");
+    gpSpecularMappingShader = LoadShader("../SpecularMapping.fx");
     if(nullptr == gpSpecularMappingShader)
     {
         return false;
