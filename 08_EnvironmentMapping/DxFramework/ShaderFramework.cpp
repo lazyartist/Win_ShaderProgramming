@@ -32,7 +32,7 @@ ID3DXFont*              gpFont			= NULL;
 LPD3DXMESH gpSphere = nullptr;
 
 // 쉐이더
-LPD3DXEFFECT gpNormalMappingShader = NULL;
+LPD3DXEFFECT gpEnvironmentMappingShader = NULL;
 
 // 회전값
 float gRotationY = 0.f;
@@ -50,6 +50,7 @@ D3DXVECTOR4 gWorldCameraPosition(0.0f, 0.0f, -200.0f, 1.0f);
 LPDIRECT3DTEXTURE9 gpStoneDM = NULL;
 LPDIRECT3DTEXTURE9 gpStoneSM = NULL;
 LPDIRECT3DTEXTURE9 gpStoneNM = NULL;
+LPDIRECT3DCUBETEXTURE9 gpSnowENV = NULL;
 
 // 프로그램 이름
 const char*				gAppName		= "Super Simple Shader Demo Framework";
@@ -208,26 +209,27 @@ void RenderScene()
     D3DXMatrixMultiply(&matWorldViewProjection, &matWorldView, &matProjection);
 
     // shader
-    gpNormalMappingShader->SetMatrix("gWorldMatrix", &matWorld);
-    gpNormalMappingShader->SetMatrix("gWorldViewProjectionMatrix", &matWorldViewProjection);
-	gpNormalMappingShader->SetVector("gWorldLightColor", &gWorldLightColor);
-	gpNormalMappingShader->SetVector("gWorldLightPosition", &gWorldLightPosition);
-	gpNormalMappingShader->SetVector("gWorldCameraPosition", &gWorldCameraPosition);
+    gpEnvironmentMappingShader->SetMatrix("gWorldMatrix", &matWorld);
+    gpEnvironmentMappingShader->SetMatrix("gWorldViewProjectionMatrix", &matWorldViewProjection);
+	gpEnvironmentMappingShader->SetVector("gWorldLightColor", &gWorldLightColor);
+	gpEnvironmentMappingShader->SetVector("gWorldLightPosition", &gWorldLightPosition);
+	gpEnvironmentMappingShader->SetVector("gWorldCameraPosition", &gWorldCameraPosition);
 	
-	gpNormalMappingShader->SetTexture("DiffuseMap_Tex", gpStoneDM);
-	gpNormalMappingShader->SetTexture("SpecularMap_Tex", gpStoneSM);
-	gpNormalMappingShader->SetTexture("NormalMap_Tex", gpStoneNM);
+	gpEnvironmentMappingShader->SetTexture("DiffuseMap_Tex", gpStoneDM);
+	gpEnvironmentMappingShader->SetTexture("SpecularMap_Tex", gpStoneSM);
+	gpEnvironmentMappingShader->SetTexture("NormalMap_Tex", gpStoneNM);
+	gpEnvironmentMappingShader->SetTexture("EnvironmentMap_Tex", gpSnowENV);
 
     // render
     UINT numPass;
-    gpNormalMappingShader->Begin(&numPass, 0);
+    gpEnvironmentMappingShader->Begin(&numPass, 0);
     for (int i = 0; i < numPass; ++i)
     {
-        gpNormalMappingShader->BeginPass(i);
+        gpEnvironmentMappingShader->BeginPass(i);
         gpSphere->DrawSubset(0);
-        gpNormalMappingShader->EndPass();
+        gpEnvironmentMappingShader->EndPass();
     }
-    gpNormalMappingShader->End();
+    gpEnvironmentMappingShader->End();
 }
 
 // 디버그 정보 등을 출력.
@@ -319,14 +321,14 @@ bool InitD3D(HWND hWnd)
 bool LoadAssets()
 {
 	// 쉐이더 로딩
-    gpNormalMappingShader = LoadShader("../NormalMapping.fx");
-    if(nullptr == gpNormalMappingShader)
+    gpEnvironmentMappingShader = LoadShader("../EnvironmentMapping.fx");
+    if(nullptr == gpEnvironmentMappingShader)
     {
         return false;
     }
 
 	// 모델 로딩
-    gpSphere = LoadModel("../SphereWithTangent.x");
+    gpSphere = LoadModel("../TeapotWithTangent.x");
     // gpSphere = LoadModel("../../Resources/Sphere.x");
     if (nullptr == gpSphere)
     {
@@ -351,6 +353,12 @@ bool LoadAssets()
 	{
 		return false;
 	}
+
+    D3DXCreateCubeTextureFromFile(gpD3DDevice, "../../Resources/Snow_ENV.dds", &gpSnowENV);
+    if (nullptr == gpSnowENV)
+    {
+        return false;
+    }
 
 	return true;
 }
@@ -438,10 +446,10 @@ void Cleanup()
 	// 모델을 release 한다.
 
 	// 쉐이더를 release 한다.
-    if(nullptr != gpNormalMappingShader)
+    if(nullptr != gpEnvironmentMappingShader)
     {
-        gpNormalMappingShader->Release();
-        gpNormalMappingShader = nullptr;
+        gpEnvironmentMappingShader->Release();
+        gpEnvironmentMappingShader = nullptr;
     }
 
     // 텍스쳐 release
@@ -456,6 +464,10 @@ void Cleanup()
     if(nullptr != gpStoneNM)
     {
         gpStoneNM->Release();
+    }
+    if(nullptr != gpSnowENV)
+    {
+        gpSnowENV->Release();
     }
 
 	// D3D를 release 한다.
