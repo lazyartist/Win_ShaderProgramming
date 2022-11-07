@@ -211,7 +211,7 @@ void RenderScene()
     gpUVAnimationShader->SetFloat("gWaveHeight", 3);
     gpUVAnimationShader->SetFloat("gSpeed", 2);
     gpUVAnimationShader->SetFloat("gWaveFrequency", 10);
-    gpUVAnimationShader->SetFloat("gUVSpeed", 0.01f);
+    gpUVAnimationShader->SetFloat("gUVSpeed", 0.25f);
 
     ULONGLONG tick = GetTickCount64();
     gpUVAnimationShader->SetFloat("gTime", static_cast<FLOAT>(tick)/1000.f);
