@@ -251,6 +251,43 @@ void RenderScene()
 	LPDIRECT3DSURFACE9 pHWDepthStencilBuffer = NULL;
 	gpD3DDevice->GetRenderTarget(0, &pHWBackBuffer);
 	gpD3DDevice->GetDepthStencilSurface(&pHWDepthStencilBuffer);
+
+	//////////////////////////////
+	// 1. 그림자 만들기
+	//////////////////////////////
+
+	// # RenderTarget과 Surface [https://www.gpgstudy.com/forum/viewtopic.php?t=18251]
+	// D3D7까지는 Surface = Texture로 사용되었지만 MipMap, CubeMap 등을 좀 더 직관적으로 처리하기 위해 Texture는 1개 이상의 Surface를 보관하는 관리자로 만들어짐
+	// 따라서 Texture는 1개 이상의 Surface가 들어있는 컨테이너 이고 실제 데이터는 Surface에 들어있음.
+
+	// 그림자맵 렌더타깃 설정
+	LPDIRECT3DSURFACE9 pShadowSurface = NULL;
+	if (SUCCEEDED(gpShadowRenderTarget->GetSurfaceLevel(0 /*렌더타깃의 색인*/, &pShadowSurface)))
+	{
+		// 가져온 LPDIRECT3DSURFACE9를 LPDIRECT3DDEVICE9에 설정
+		gpD3DDevice->SetRenderTarget(0 /*렌더타겟의 색인*/, pShadowSurface);
+
+		// # GetSurfaceLevel()의 참조 수 증가 [https://learn.microsoft.com/ko-kr/windows/win32/api/d3d9/nf-d3d9-idirect3dtexture9-getsurfacelevel]
+		// IDirect3DTexture9의 GetSurfaceLevel()를 사용하면 LPDIRECT3DSURFACE9의 내부 참조 수가 증가하므로 
+		// 사용을 마친 후 Release(IUnknown::Release)를 호출하지 않으면 메모리 누수가 발생함.
+		pShadowSurface->Release();
+		pShadowSurface = NULL;
+	}
+
+	// 깊이 버퍼를 설정
+	gpD3DDevice->SetDepthStencilSurface(gpShadowDepthStencil);
+
+	// 지난 프레임에 그렸던 그림자 정보를 지움
+	// # IDirect3DDevice9::Clear 메서드 [http://telnet.or.kr/directx/graphics/reference/d3d/interfaces/idirect3ddevice9/clear.htm]
+	gpD3DDevice->Clear(0, 
+		NULL, 
+		(D3DCLEAR_TARGET /*렌더타깃 클리어*/ | D3DCLEAR_ZBUFFER /*깊이 버퍼를 클리어*/), 
+		0xFFFFFFFF /*렌더링 타겟 표면을 클리어 하는 32 비트 ARGB 색값*/,
+		1.0f /*깊이 버퍼에 보존하는 새로운 z 값*/,
+		0 /*각 스텐실 버퍼의 엔트리에 보존하는 정수값*/
+	);
+
+
 }
 
 // 디버그 정보 등을 출력.
@@ -288,7 +325,7 @@ bool InitEverything(HWND hWnd)
 		return false;
 	}
 
-	// 렌더타깃을 만든다.
+	// 렌더타깃 텍스처를 만든다.
 	constexpr int shadowMapSize = 2048;
 	if (FAILED(gpD3DDevice->CreateTexture(
 		shadowMapSize /*렌더타깃의 너비*/,
