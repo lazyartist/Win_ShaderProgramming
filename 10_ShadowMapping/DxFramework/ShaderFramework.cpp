@@ -287,7 +287,41 @@ void RenderScene()
 		0 /*각 스텐실 버퍼의 엔트리에 보존하는 정수값*/
 	);
 
+	// 그림자 만들기 셰이더 전역변수들을 설정
+	gpCreateShadowShader->SetMatrix("gWorldMatrix", &matTorusWorld);
+	gpCreateShadowShader->SetMatrix("gLightViewMatrix", &matLightView);
+	gpCreateShadowShader->SetMatrix("gLightProjectionMatrix", &matLightProjection);
 
+	// 그림자 만들기 셰이더 시작
+	{
+		UINT numPasses = 0;
+		gpCreateShadowShader->Begin(&numPasses, NULL);
+		{
+			for (UINT i = 0; i< numPasses; ++i)
+			{
+				gpCreateShadowShader->BeginPass(i);
+				{
+					// 원환체를 그린다.
+					gpTorus->DrawSubset(0);
+				}
+				gpCreateShadowShader->EndPass();
+			}
+		}
+		gpCreateShadowShader->End();
+	}
+
+	//////////////////////////////
+	// 2. 그림자 입히기
+	//////////////////////////////
+
+	// 하드웨어 백버퍼/깊이 버퍼를 사용한다.
+	gpD3DDevice->SetRenderTarget(0, pHWBackBuffer);
+	gpD3DDevice->SetDepthStencilSurface(pHWDepthStencilBuffer);
+
+	pHWBackBuffer->Release();
+	pHWBackBuffer = NULL;
+	pHWDepthStencilBuffer->Release();
+	pHWDepthStencilBuffer = NULL;
 }
 
 // 디버그 정보 등을 출력.
