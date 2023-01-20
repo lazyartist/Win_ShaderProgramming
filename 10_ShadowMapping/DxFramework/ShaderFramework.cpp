@@ -213,12 +213,12 @@ void RenderScene()
 		D3DXMATRIXA16 matView;
 		D3DXVECTOR3 vEyePt(gWorldCameraPosition.x, gWorldCameraPosition.y, gWorldCameraPosition.z);
 		D3DXVECTOR3 vLookatPt(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 vUpVec(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);
 		D3DXMatrixLookAtLH(&matView, &vEyePt, &vLookatPt, &vUpVec);
 
 		// 투영행렬을 만든다.
 		D3DXMATRIXA16 matProjection;
-		D3DXMatrixPerspectiveFovLH(&matProjection, FOV, WIN_WIDTH / WIN_HEIGHT, 1.0f, 1000.f);
+		D3DXMatrixPerspectiveFovLH(&matProjection, FOV, WIN_WIDTH / (float)WIN_HEIGHT, 1.0f, 10000.f); // (float) 형변환 하지 않으면 정수값이 돼서 소숫점이 사라지므로 화면비가 잘 못된다.
 		D3DXMatrixMultiply(&matViewProjection, &matView, &matProjection);
 	}
 
