@@ -318,10 +318,46 @@ void RenderScene()
 	gpD3DDevice->SetRenderTarget(0, pHWBackBuffer);
 	gpD3DDevice->SetDepthStencilSurface(pHWDepthStencilBuffer);
 
+	// GetRenderTarget(), GetDepthStencilSurface()를 통해 버퍼를 얻을 때 증가한 참조 카운터를 줄여주기 위해 Release() 해준다.
 	pHWBackBuffer->Release();
 	pHWBackBuffer = NULL;
 	pHWDepthStencilBuffer->Release();
 	pHWDepthStencilBuffer = NULL;
+
+	// 그림자 입히기 셰이더 전역변수들을 설정
+	gpApplyShadowShader->SetMatrix("gWorldMatrix", &matTorusWorld); // 원환체
+	gpApplyShadowShader->SetMatrix("gViewProjectionMatrix", &matViewProjection); // 뷰/투영행렬
+	gpApplyShadowShader->SetMatrix("gLightViewMatrix", &matLightView); // 광원-뷰행렬
+	gpApplyShadowShader->SetMatrix("gLightProjectionMatrix", &matLightProjection); // 광원-투영행렬
+	gpApplyShadowShader->SetVector("gWorldLightPosition", &gWorldLightPosition); // 광원 위치: 난반사광 계산용
+	gpApplyShadowShader->SetVector("gObjectColor", &gTorusColor); // 물체 색상
+	gpApplyShadowShader->SetTexture("ShadowMap_Tex", gpShadowRenderTarget); // 그림자맵
+
+	// 원환체 그리기 셰이더 시작
+	{
+		UINT numPasses = 0;
+		gpApplyShadowShader->Begin(&numPasses, NULL);
+		{
+			for (UINT i = 0; i < numPasses; ++i)
+			{
+				gpApplyShadowShader->BeginPass(i);
+				{
+					// 원환체를 그린다.
+					gpTorus->DrawSubset(0);
+
+					// 디스크를 그린다.
+					// 디스크를 위치, 색상이 원환체와 다르므로 변수를 다시 설정해준다.
+					gpApplyShadowShader->SetMatrix("gWorldMatrix", &matDiscWorld);
+					gpApplyShadowShader->SetVector("gObjectColor", &gDiscColor);
+					// BeginPass(), EndPass() 블록 사이에서 변수 값을 바꿔 줄 때는 CommitChange() 함수를 호출해야 새로운 값을 사용할 수 있다.
+					gpApplyShadowShader->CommitChanges();
+					gpDisc->DrawSubset(0);
+				}
+				gpApplyShadowShader->EndPass();
+			}
+		}
+		gpApplyShadowShader->End();
+	}
 }
 
 // 디버그 정보 등을 출력.
