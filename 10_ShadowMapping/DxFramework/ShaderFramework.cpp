@@ -156,7 +156,7 @@ void PlayDemo()
 // 게임로직 업데이트
 void Update()
 {
-	gRotationY += 1.f * PI / 180.f; // 회전각(Degee) 설정
+	gRotationY += 0.01f * PI / 180.f; // 회전각(Degee) 설정
 	if (PI * 2.f < gRotationY)
 	{
 		gRotationY -= PI * 2.f; // 360도 이상이면 360만큼 빼서 계속 돌 수 있게 한다.
@@ -195,7 +195,7 @@ void RenderScene()
 	{
 		D3DXVECTOR3 vEyePt(gWorldLightPosition.x, gWorldLightPosition.y, gWorldLightPosition.z);
 		D3DXVECTOR3 vLookatPt(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 vUpVec(0.0f, 0.0f, 0.0f);
+		D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);
 
 		D3DXMatrixLookAtLH(&matLightView, &vEyePt, &vLookatPt, &vUpVec);
 	}
@@ -246,7 +246,8 @@ void RenderScene()
 		D3DXMatrixMultiply(&matDiscWorld, &matScale, &matTrans);
 	}
 
-	// 현재 하드웨어 백버퍼와 깊이버퍼
+	// 현재 하드웨어 백버퍼와 깊이버퍼 백업
+	// 하드웨어 백버퍼 대신에 그림자맵을 렌더타깃으로 설정하고 다시 하드웨어 백버퍼를 넣어줘야 하기 때문에 백업한다.
 	LPDIRECT3DSURFACE9 pHWBackBuffer = NULL;
 	LPDIRECT3DSURFACE9 pHWDepthStencilBuffer = NULL;
 	gpD3DDevice->GetRenderTarget(0, &pHWBackBuffer);
@@ -275,6 +276,7 @@ void RenderScene()
 	}
 
 	// 깊이 버퍼를 설정
+	// 그림자맵과 쌍을 이루는 깊이버퍼를 설정하지 않으면 그림자가 사라지고 빛이 어두워진다.
 	gpD3DDevice->SetDepthStencilSurface(gpShadowDepthStencil);
 
 	// 지난 프레임에 그렸던 그림자 정보를 지움
@@ -314,7 +316,7 @@ void RenderScene()
 	// 2. 그림자 입히기
 	//////////////////////////////
 
-	// 하드웨어 백버퍼/깊이 버퍼를 사용한다.
+	// 원래 하드웨어 백버퍼와 깊이버퍼 복원
 	gpD3DDevice->SetRenderTarget(0, pHWBackBuffer);
 	gpD3DDevice->SetDepthStencilSurface(pHWDepthStencilBuffer);
 
