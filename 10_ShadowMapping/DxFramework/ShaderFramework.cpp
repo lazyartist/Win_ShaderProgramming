@@ -277,6 +277,7 @@ void RenderScene()
 
 	// 깊이 버퍼를 설정
 	// 그림자맵과 쌍을 이루는 깊이버퍼를 설정하지 않으면 그림자가 사라지고 빛이 어두워진다.
+	// todo #?
 	gpD3DDevice->SetDepthStencilSurface(gpShadowDepthStencil);
 
 	// 지난 프레임에 그렸던 그림자 정보를 지움
