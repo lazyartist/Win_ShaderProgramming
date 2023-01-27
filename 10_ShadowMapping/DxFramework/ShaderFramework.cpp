@@ -281,6 +281,7 @@ void RenderScene()
 	gpD3DDevice->SetDepthStencilSurface(gpShadowDepthStencil);
 
 	// 지난 프레임에 그렸던 그림자 정보를 지움
+	// 렌더타깃과 깊이버퍼를 한 번에 지운다.
 	// # IDirect3DDevice9::Clear 메서드 [http://telnet.or.kr/directx/graphics/reference/d3d/interfaces/idirect3ddevice9/clear.htm]
 	gpD3DDevice->Clear(0, 
 		NULL, 
@@ -415,6 +416,7 @@ bool InitEverything(HWND hWnd)
 	}
 
 	// 그림자맵과 동일한 크기의 깊이버퍼도 만들어줘야 한다.
+	// 깊이버퍼는 Texture를 생성하고 Texture에서 받아오지 않고 바로 Surface가 생성된다.
 	if (FAILED(gpD3DDevice->CreateDepthStencilSurface(
 		shadowMapSize /*깊이 버퍼의 너비*/,
 		shadowMapSize /*깊이 버퍼의 높이*/,
