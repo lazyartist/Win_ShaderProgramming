@@ -43,5 +43,8 @@ void RenderFrame();
 void RenderScene();
 void RenderInfo();
 
+// 사각형을 만드는 함수
+void InitFullScreenQuad();
+
 // 뒷정리 관련
 void Cleanup();

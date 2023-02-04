@@ -52,6 +52,11 @@ LPDIRECT3DTEXTURE9 gpStoneSM = NULL;
 LPDIRECT3DTEXTURE9 gpStoneNM = NULL;
 LPDIRECT3DCUBETEXTURE9 gpSnowENV = NULL;
 
+// 화면을 가득 채우는 사각형
+LPDIRECT3DVERTEXDECLARATION9 gpFullscreenQuadDecl = NULL;
+LPDIRECT3DVERTEXBUFFER9 gpFullscreenQuadVB = NULL;
+LPDIRECT3DINDEXBUFFER9 gpFullscreenQuadIB = NULL;
+
 // 프로그램 이름
 const char*				gAppName		= "Super Simple Shader Demo Framework";
 // const char*				gAppName		= "초간단 쉐이더 데모 프레임워크";
@@ -248,6 +253,13 @@ void RenderInfo()
 	// 키 입력 정보를 출력
 	// gpFont->DrawTextW(NULL, L"abcd 한글", -1, &rct, 0, fontColor );
 	gpFont->DrawText(NULL, "Demo Framework\n\nESC: Exit Demo", -1, &rct, 0, fontColor );
+}
+
+
+void InitFullScreenQuad()
+{
+	// 정점 선언을 만든다
+	D3DVERTEXELEMENT9 vtxDesc[3];
 }
 
 //------------------------------------------------------------
@@ -469,6 +481,25 @@ void Cleanup()
     {
         gpSnowENV->Release();
     }
+
+	// 화면크기 사각형을 해제한다.
+	if (gpFullscreenQuadDecl)
+	{
+		gpFullscreenQuadDecl->Release();
+		gpFullscreenQuadDecl = NULL;
+	}
+
+	if (gpFullscreenQuadVB)
+	{
+		gpFullscreenQuadVB->Release();
+		gpFullscreenQuadVB = NULL;
+	}
+
+	if (gpFullscreenQuadIB)
+	{
+		gpFullscreenQuadIB->Release();
+		gpFullscreenQuadIB = NULL;
+	}
 
 	// D3D를 release 한다.
     if(gpD3DDevice)
