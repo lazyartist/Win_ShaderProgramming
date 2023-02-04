@@ -916,7 +916,7 @@
        <RmRegistryBranch NAME="Effect Workspace.ColorConversion" API="" XML_VERSION="RenderMonkey 1.71">
         <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="26" MIN="-10" MAX="10" CLAMP="FALSE"/>
         <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1177" MIN="-10" MAX="10" CLAMP="FALSE"/>
-        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="546" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="858" MIN="-10" MAX="10" CLAMP="FALSE"/>
         <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="499" MIN="-10" MAX="10" CLAMP="FALSE"/>
         <RmIntegerVariable NAME="ShowStatus" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
         <RmIntegerVariable NAME="Visible" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
@@ -956,9 +956,9 @@
       <RmRegistryBranch NAME="Effect Workspace.ColorConversion" API="" XML_VERSION="RenderMonkey 1.71">
        <RmRegistryBranch NAME="Disassembly" API="" XML_VERSION="RenderMonkey 1.71"/>
        <RmStringVariable NAME="Editing Shader" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-Pixel Shader]]></RmTextDataBlock></RmStringVariable>
+Vertex Shader]]></RmTextDataBlock></RmStringVariable>
        <RmStringVariable NAME="Editing Pass" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-EnvironmentMapping]]></RmTextDataBlock></RmStringVariable>
+Grayscale]]></RmTextDataBlock></RmStringVariable>
        <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="7" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1083" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1173" MIN="-10" MAX="10" CLAMP="FALSE"/>
@@ -971,6 +971,18 @@ EnvironmentMapping]]></RmTextDataBlock></RmStringVariable>
      </RmRegistryBranch>
      <RmRegistryBranch NAME="RmRenderStateBlockEditor" API="" XML_VERSION="RenderMonkey 1.71">
       <RmRegistryBranch NAME="EditNodeRepository" API="" XML_VERSION="RenderMonkey 1.71"/>
+      <RmRegistryBranch NAME="NodeRepository" API="" XML_VERSION="RenderMonkey 1.71">
+       <RmRegistryBranch NAME="Effect Workspace.ColorConversion" API="" XML_VERSION="RenderMonkey 1.71">
+        <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="52" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="52" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1109" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1118" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="ShowStatus" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Visible" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="0" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Minimized X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="-1" MIN="-10" MAX="10" CLAMP="FALSE"/>
+        <RmIntegerVariable NAME="Minimized Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="-1" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       </RmRegistryBranch>
+      </RmRegistryBranch>
      </RmRegistryBranch>
      <RmRegistryBranch NAME="RmTextureObjectEditor" API="" XML_VERSION="RenderMonkey 1.71">
       <RmRegistryBranch NAME="EditNodeRepository" API="" XML_VERSION="RenderMonkey 1.71"/>
@@ -1033,7 +1045,7 @@ EnvironmentMapping]]></RmTextDataBlock></RmStringVariable>
     </RmRegistryBranch>
     <RmRegistryBranch NAME="WORKSPACE" API="" XML_VERSION="RenderMonkey 1.71">
      <RmStringVariable NAME="LAST_SAVE" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-1/2/2023 8:57:14]]></RmTextDataBlock></RmStringVariable>
+4/2/2023 18:35:44]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 RenderMonkey Version 1.82 (build 322)]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="XML_VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
@@ -1045,7 +1057,7 @@ D:\Projects\Win_ShaderProgramming\11_ColorConversion\]]></RmTextDataBlock></RmSt
   </RmRegistryBranch>
   <RmDirectXEffect NAME="ColorConversion" API="D3D" ACTIVE_CAMERA="">
    <RmVectorVariable NAME="gWorldLightPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE_0="500.000000" VALUE_1="500.000000" VALUE_2="-500.000000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
-   <RmVectorVariable NAME="gWorldCameraPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewPosition" VALUE_0="194.808807" VALUE_1="33.912960" VALUE_2="-29.990837" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
+   <RmVectorVariable NAME="gWorldCameraPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewPosition" VALUE_0="0.000000" VALUE_1="0.000000" VALUE_2="-200.000000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
    <RmDynamicVariable NAME="gWorldLightColor" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VARIABLE_TYPE="FLOAT" ROWS="3" COLUMNS="1" FIXED_SIZE="TRUE" MIN="-1.000000" MAX="1.000000" CLAMP="FALSE" NORMALIZE="FALSE">
     <RmDynamicVariableValueContainer>
      <RmDynamicVariableValue ROW_INDEX="0" COLUMN_INDEX="0" VALUE="1.000000"/>
@@ -1053,13 +1065,13 @@ D:\Projects\Win_ShaderProgramming\11_ColorConversion\]]></RmTextDataBlock></RmSt
      <RmDynamicVariableValue ROW_INDEX="2" COLUMN_INDEX="0" VALUE="0.000000"/>
     </RmDynamicVariableValueContainer>
    </RmDynamicVariable>
-   <RmMatrixVariable NAME="gWorldViewProjectionMatrix" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="WorldViewProjection" VALUE_0="0.318829" VALUE_1="-0.002199" VALUE_2="2.068502" VALUE_3="0.000002" VALUE_4="-0.404207" VALUE_5="2.379252" VALUE_6="0.064832" VALUE_7="-0.000061" VALUE_8="-0.975019" VALUE_9="-0.169735" VALUE_10="0.150104" VALUE_11="199.199234" VALUE_12="-0.974044" VALUE_13="-0.169565" VALUE_14="0.149954" VALUE_15="200.000031"/>
+   <RmMatrixVariable NAME="gWorldViewProjectionMatrix" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="WorldViewProjection" VALUE_0="1.313701" VALUE_1="0.000000" VALUE_2="0.000000" VALUE_3="0.000000" VALUE_4="0.000000" VALUE_5="2.414214" VALUE_6="0.000000" VALUE_7="0.000000" VALUE_8="0.000000" VALUE_9="0.000000" VALUE_10="1.001001" VALUE_11="199.199188" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="1.000000" VALUE_15="200.000000"/>
    <RmMatrixVariable NAME="gWorldMatrix" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="World" VALUE_0="1.000000" VALUE_1="0.000000" VALUE_2="0.000000" VALUE_3="0.000000" VALUE_4="0.000000" VALUE_5="1.000000" VALUE_6="0.000000" VALUE_7="0.000000" VALUE_8="0.000000" VALUE_9="0.000000" VALUE_10="1.000000" VALUE_11="0.000000" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="0.000000" VALUE_15="1.000000"/>
    <Rm2DTextureVariable NAME="NormalMap" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Textures\FieldstoneBumpDOT3.tga" ORIGIN="0"/>
    <Rm2DTextureVariable NAME="SpecularMap" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="..\Resources\Fieldstone_SM.tga" ORIGIN="0"/>
    <Rm2DTextureVariable NAME="DiffuseMap" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Textures\Fieldstone.tga" ORIGIN="0"/>
    <RmCubemapVariable NAME="EnvironmentMap" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Textures\Snow.dds" ORIGIN="0"/>
-   <RmRenderableTexture NAME="sceneTexture" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="" ORIGIN="0" WIDTH="526" HEIGHT="456" FORMAT="21" USE_VIEWPORT_DIMENSIONS="TRUE" GENERATE_MIPMAPS="TRUE" WIDTH_RATIO="1.000000" HEIGHT_RATIO="1.000000"/>
+   <RmRenderableTexture NAME="sceneTexture" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="" ORIGIN="0" WIDTH="838" HEIGHT="456" FORMAT="21" USE_VIEWPORT_DIMENSIONS="TRUE" GENERATE_MIPMAPS="TRUE" WIDTH_RATIO="1.000000" HEIGHT_RATIO="1.000000"/>
    <RmStreamMap NAME="Stream Mapping" API="">
     <RmStream NAME="Stream" API="" STRIDE="56">
      <RmStreamChannel NAME="Position_0" API="" DATA_SIZE="12" DATA_TYPE="2" REGISTER="0" USAGE="0" USAGE_INDEX="0" ATTRIBUTE_NAME="rm_Vertex"/>
@@ -1070,6 +1082,57 @@ D:\Projects\Win_ShaderProgramming\11_ColorConversion\]]></RmTextDataBlock></RmSt
     </RmStream>
    </RmStreamMap>
    <RmModelData NAME="Model" API="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Models\Teapot.3ds" ORIENTATION="0"/>
+   <RmModelData NAME="ScreenAlignedQuad" API="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Models\ScreenAlignedQuad.3ds" ORIENTATION="0"/>
+   <RmPass NAME="NoEffect" API="D3D" PASS_INDEX="1" ENABLED="TRUE">
+    <RmModelReference NAME="ScreenAlignedQuad" API=""/>
+    <RmRenderStateBlock NAME="Render State" API="D3D">
+     <RmState NAME="D3DRS_CULLMODE" API="D3D" STATE="22" VALUE="1" USAGE="RENDER_STATE"/>
+    </RmRenderStateBlock>
+    <RmHLSLShader NAME="Vertex Shader" API="D3D" PIXEL_SHADER="FALSE" TARGET="vs_2_0" ENTRY_POINT="vs_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct VS_INPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+struct VS_OUTPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+VS_OUTPUT vs_main( VS_INPUT Input )
+{
+   VS_OUTPUT Output;
+   
+   Output.mPosition = Input.mPosition;
+   Output.mUV = Input.mUV;
+   
+   return Output;
+}
+
+]]></RmShaderCode></RmHLSLShader>
+    <RmHLSLShader NAME="Pixel Shader" API="D3D" PIXEL_SHADER="TRUE" TARGET="ps_2_0" ENTRY_POINT="ps_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct PS_INPUT
+{
+   float2 mUV : TEXCOORD0;
+};
+
+sampler2D SceneSampler;
+
+float4 ps_main( PS_INPUT Input ) : COLOR
+{
+   float4 tex = tex2D(SceneSampler, Input.mUV);
+   
+   return tex;
+}]]></RmShaderCode>
+     <RmSampler NAME="SceneSampler" API="" REGISTER="0"/>
+    </RmHLSLShader>
+    <RmStreamMapReference NAME="Stream Mapping" API=""/>
+    <RmTextureObject NAME="SceneSampler" API="D3D" STATE_INDEX="0" VERTEX_TEXTURE="FALSE">
+     <RmTextureReference NAME="sceneTexture" API=""/>
+    </RmTextureObject>
+   </RmPass>
    <RmPass NAME="EnvironmentMapping" API="D3D" PASS_INDEX="0" ENABLED="TRUE">
     <RmModelReference NAME="Model" API=""/>
     <RmHLSLShader NAME="Vertex Shader" API="D3D" PIXEL_SHADER="FALSE" TARGET="vs_2_0" ENTRY_POINT="vs_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
@@ -1207,6 +1270,110 @@ float4 ps_main(PS_INPUT Input) : COLOR
     </RmTextureObject>
     <RmTextureObject NAME="DiffuseSampler" API="D3D" STATE_INDEX="0" VERTEX_TEXTURE="FALSE">
      <RmTextureReference NAME="DiffuseMap" API=""/>
+    </RmTextureObject>
+   </RmPass>
+   <RmPass NAME="Grayscale" API="D3D" PASS_INDEX="2" ENABLED="TRUE">
+    <RmModelReference NAME="ScreenAlignedQuad" API=""/>
+    <RmRenderStateBlock NAME="Render State" API="D3D">
+     <RmState NAME="D3DRS_CULLMODE" API="D3D" STATE="22" VALUE="1" USAGE="RENDER_STATE"/>
+    </RmRenderStateBlock>
+    <RmHLSLShader NAME="Vertex Shader" API="D3D" PIXEL_SHADER="FALSE" TARGET="vs_2_0" ENTRY_POINT="vs_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct VS_INPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+struct VS_OUTPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+VS_OUTPUT vs_main( VS_INPUT Input )
+{
+   VS_OUTPUT Output;
+   
+   Output.mPosition = Input.mPosition;
+   Output.mUV = Input.mUV;
+   
+   return Output;
+}
+
+]]></RmShaderCode></RmHLSLShader>
+    <RmHLSLShader NAME="Pixel Shader" API="D3D" PIXEL_SHADER="TRUE" TARGET="ps_2_0" ENTRY_POINT="ps_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct PS_INPUT
+{
+   float2 mUV : TEXCOORD0;
+};
+
+sampler2D SceneSampler;
+
+float4 ps_main( PS_INPUT Input ) : COLOR
+{
+   float4 tex = tex2D(SceneSampler, Input.mUV);
+   //tex.rgb = (tex.r + tex.g + tex.b) / 3;
+   tex.rgb = dot(tex.rgb, float3(0.3, 0.59, 0.11));
+   
+   return tex;
+}]]></RmShaderCode>
+     <RmSampler NAME="SceneSampler" API="" REGISTER="0"/>
+    </RmHLSLShader>
+    <RmStreamMapReference NAME="Stream Mapping" API=""/>
+    <RmTextureObject NAME="SceneSampler" API="D3D" STATE_INDEX="0" VERTEX_TEXTURE="FALSE">
+     <RmTextureReference NAME="sceneTexture" API=""/>
+    </RmTextureObject>
+   </RmPass>
+   <RmPass NAME="Sepia" API="D3D" PASS_INDEX="3" ENABLED="TRUE">
+    <RmModelReference NAME="ScreenAlignedQuad" API=""/>
+    <RmRenderStateBlock NAME="Render State" API="D3D">
+     <RmState NAME="D3DRS_CULLMODE" API="D3D" STATE="22" VALUE="1" USAGE="RENDER_STATE"/>
+    </RmRenderStateBlock>
+    <RmHLSLShader NAME="Vertex Shader" API="D3D" PIXEL_SHADER="FALSE" TARGET="vs_2_0" ENTRY_POINT="vs_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct VS_INPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+struct VS_OUTPUT
+{
+   float4 mPosition: POSITION;
+   float2 mUV : TEXCOORD0;
+};
+
+VS_OUTPUT vs_main( VS_INPUT Input )
+{
+   VS_OUTPUT Output;
+   
+   Output.mPosition = Input.mPosition;
+   Output.mUV = Input.mUV;
+   
+   return Output;
+}
+
+]]></RmShaderCode></RmHLSLShader>
+    <RmHLSLShader NAME="Pixel Shader" API="D3D" PIXEL_SHADER="TRUE" TARGET="ps_2_0" ENTRY_POINT="ps_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
+struct PS_INPUT
+{
+   float2 mUV : TEXCOORD0;
+};
+
+sampler2D SceneSampler;
+
+float4 ps_main( PS_INPUT Input ) : COLOR
+{
+   float4 tex = tex2D(SceneSampler, Input.mUV);
+   //tex.rgb = (tex.r + tex.g + tex.b) / 3;
+   tex.rgb = dot(tex.rgb, float3(0.3, 0.59, 0.11));
+   
+   return tex;
+}]]></RmShaderCode>
+     <RmSampler NAME="SceneSampler" API="" REGISTER="0"/>
+    </RmHLSLShader>
+    <RmStreamMapReference NAME="Stream Mapping" API=""/>
+    <RmTextureObject NAME="SceneSampler" API="D3D" STATE_INDEX="0" VERTEX_TEXTURE="FALSE">
+     <RmTextureReference NAME="sceneTexture" API=""/>
     </RmTextureObject>
    </RmPass>
   </RmDirectXEffect>
