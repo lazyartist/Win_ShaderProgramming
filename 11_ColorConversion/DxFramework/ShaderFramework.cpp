@@ -258,8 +258,59 @@ void RenderInfo()
 
 void InitFullScreenQuad()
 {
-	// 정점 선언을 만든다
-	D3DVERTEXELEMENT9 vtxDesc[3];
+	// 정점 선언을 만든다. 정점 선언은 Mesh를 그릴 때 정점버퍼를 해석하는 방식을 D3D에 알리는 용도.
+	D3DVERTEXELEMENT9 vtxDesc[3]; // 정점에 들어갈 데이터는 D3DVERTEXELEMENT9 구조체 배열로 정의
+	
+	int offset = 0;
+	int i = 0;
+
+	// 위치
+	vtxDesc[i].Stream = 0; // 정점버퍼가 들어가는 슬롯의 색인(D3D 장치에 정점버퍼들을 동시에 여러 개 넣을 수 있기 때문)
+	vtxDesc[i].Offset = offset; // 정점정보가 시작하는 위치에서 현재 요소까지의 오프셋
+	vtxDesc[i].Type = D3DDECLTYPE_FLOAT3; // 데이터형. 위치값이므로 x, y, z 요소 3개.
+	vtxDesc[i].Method = D3DDECLMETHOD_DEFAULT; // 무조건 D3DDECLMETHOD_DEFAULT 사용.
+	vtxDesc[i].Usage = D3DDECLUSAGE_POSITION; // 용도. 위치값.
+	vtxDesc[i].UsageIndex = 0; // 셰이더에서 TEXCOORD0, TEXCOORD1, ... 등으로 시맨틱을 사용할 때 뒤에 붙는 숫자.
+
+	offset += sizeof(float) * 3; // 위치를 float3만큼 사용했으므로 그 만틈 오프셋을 옮긴다.
+	++i;
+
+	// UV 좌표 0
+	vtxDesc[i].Stream = 0;
+	vtxDesc[i].Offset = offset;
+	vtxDesc[i].Type = D3DDECLTYPE_FLOAT2; // 데이터형. UV이므로 u, v 요소 2개.
+	vtxDesc[i].Method = D3DDECLMETHOD_DEFAULT;
+	vtxDesc[i].Usage = D3DDECLUSAGE_TEXCOORD; // 용도. 텍스쳐.
+	vtxDesc[i].UsageIndex = 0;
+
+	offset += sizeof(float) * 2; // UV를 float2만큼 사용했으므로 그 만틈 오프셋을 옮긴다.
+	++i;
+
+	// 정점포맷의 끝임을 표현 (D3DDECL_END())
+	// vtxDesc[i] = D3DDECL_END(); // 아래 코드는 이 코드를 풀어쓴 것으로써 같은 의미이다.
+	vtxDesc[i].Stream = 0xFF;
+	vtxDesc[i].Offset = 0;
+	vtxDesc[i].Type = D3DDECLTYPE_UNUSED;
+	vtxDesc[i].Method = 0;
+	vtxDesc[i].Usage = 0;
+	vtxDesc[i].UsageIndex = 0;
+
+	// 여기까지 코드 작성하니 다음 경고가 났다.
+	// "C26482: Only index into arrays using constant expressions"
+	// 일단 ChatGPT에 물어봤다.
+	// ----------
+	// in English
+	// The warning message "Only index into arrays using constant expressions" is given because the index i used to access elements in the vtxDesc array is not a constant expression. This means that it could be changed at runtime, which can lead to potential errors or security vulnerabilities if the index goes out of bounds.
+	// In C++, it is recommended to use only constant expressions when indexing into arrays, as this ensures that the index will always be within the bounds of the arrayand that the access will be optimized by the compiler.
+	// To resolve this warning, you can replace i with a constant expression, for example:
+	// in Korean
+	// "Only index into arrays using constant expressions" 경고 메시지는 코드에서 vtxDesc 배열에 접근하는 인덱스 i가 상수 표현식이 아닌 것 때문에 나오는 것입니다. 이는 런타임에 변경될 수 있다는 것을 의미하며, 인덱스가 배열의 범위를 벗어나는 경우 오류 또는 보안 취약점이 발생할 수 있습니다.
+	// C++에서는 배열에 접근할 때 상수 표현식만 사용하는 것이 좋습니다.이는 인덱스가 항상 배열의 범위 안에 있음을 보장하며, 컴파일러에 의해 최적화될 수 있음을 뜻합니다.
+	// 이 경고를 해결하려면 i를 상수 표현식으로 대체할 수 있습니다.예를 들어 :
+	// ----------
+	// 근데 배열에 접근하는데 왜 상수만 사용해야하나 이유를 모르겠어서 찾아보니 범위에 기반한 루프문에서 배열에 접근하라는 뜻이었다.
+	// i가 코드 중간에 변경되면 배열 범위를 벗어나므로 위험하기 때문에 위 처럼 쓸거면 상수를 사용해서 코드를 명확하게 해야하고 아니면 범위를 지정해서 접근하라는 뜻.
+
 }
 
 //------------------------------------------------------------
