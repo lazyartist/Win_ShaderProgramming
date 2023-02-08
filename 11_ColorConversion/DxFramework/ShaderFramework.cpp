@@ -311,6 +311,20 @@ void InitFullScreenQuad()
 	// 근데 배열에 접근하는데 왜 상수만 사용해야하나 이유를 모르겠어서 찾아보니 범위에 기반한 루프문에서 배열에 접근하라는 뜻이었다.
 	// i가 코드 중간에 변경되면 배열 범위를 벗어나므로 위험하기 때문에 위 처럼 쓸거면 상수를 사용해서 코드를 명확하게 해야하고 아니면 범위를 지정해서 접근하라는 뜻.
 
+	// 정점선언을 만든다.
+	gpD3DDevice->CreateVertexDeclaration(vtxDesc, &gpFullscreenQuadDecl);
+	// 위 표현식에서 다음 경고가 나왔다.
+	// "no array to pointer decay"
+	// 독해가 안돼서 ChatGPT에 물어봤다.
+	// - "No array-to-pointer decay" refers to a rule in C programming language that prohibits the implicit conversion of an array type to a pointer type. In C, arrays can be automatically converted to pointers when used in an expression, but when the "no array-to-pointer decay" rule is applied, the automatic conversion is disallowed.
+	// - "No array-to-pointer decay"이란 C 프로그래밍 언어에서 배열 유형이 포인터 유형으로의 암시적 변환을 금지하는 규칙을 의미합니다. C에서는 표현식에서 사용될 때 배열이 자동으로 포인터로 변환될 수 있지만, "no array-to-pointer decay" 규칙이 적용되면 이 자동 변환이 허용되지 않습니다.
+	// 결과적으로 포인터에 배열을 썼고 이게 암시적 변환이 되니 주의해라라는 의미이다.
+	// 이게 문제가 될수있는게 함수 내에서 배열이면 sizeof를 사용하여 전체 크기를 알 수 있지만 포인터로 사용할 경우 크기값을 따로 지정하거나 알려줘야 하기 때문이다.
+	// 일단 아래처럼 포인터로 전달하면 경고는 사라진다.
+	// gpD3DDevice->CreateVertexDeclaration(&vtxDesc[0], &gpFullscreenQuadDecl);
+
+	// 정점버퍼를 만든다.
+	gpD3DDevice->CreateVertexBuffer(offset * 4, 0, 0, D3DPOOL_MANAGED, &gpFullscreenQuadVB, NULL);
 }
 
 //------------------------------------------------------------
