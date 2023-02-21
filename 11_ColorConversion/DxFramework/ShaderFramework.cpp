@@ -324,7 +324,37 @@ void InitFullScreenQuad()
 	// gpD3DDevice->CreateVertexDeclaration(&vtxDesc[0], &gpFullscreenQuadDecl);
 
 	// 정점버퍼를 만든다.
-	gpD3DDevice->CreateVertexBuffer(offset * 4, 0, 0, D3DPOOL_MANAGED, &gpFullscreenQuadVB, NULL);
+	gpD3DDevice->CreateVertexBuffer(
+		offset * 4 /*정점버퍼의 크기. offset에 한 점점의 크기가 있고 정점을 4개 넣을것이므로 4를 곱한다.*/
+		, 0 /*용도가 없다.*/
+		, 0 /*FVF(설명은 아래)를 설정*/
+		, D3DPOOL_MANAGED /*D3D가 관리하는 메모리 풀을 사용*/
+		, &gpFullscreenQuadVB /*새로운 정점버퍼를 저장할 포인터*/
+		, NULL /*언제나 NULL*/
+	);
+	// FVF(Flexible vertext format): 유동적인 정점 포맷. 셰이더를 사용할 경우 FVF 대신 정점선언을 사용하는게 보통. 
+	// 정점선언은 TANGENT, BINORMAL 타입도 지원하고 FVF와 달리 특정 순서로 정점정보를 넣어줘야 하는 제약도 없기 때문.
+
+	// 정점버퍼를 채운다.
+	void* vertexData = NULL;
+	gpFullscreenQuadVB->Lock(0, 0, &vertexData, 0); // Lock()을 사용하여 메모리에 직접 접근. 또한 정점버퍼를 다른 곳에서 사용하지 못하도록 잠근다.
+	{
+		float* data = (float*)vertexData;
+		*data++ = -1.0f;    *data++ = 1.0f;    *data++ = 0.0f;
+		*data++ = 0.0f;     *data++ = 0.0f;
+
+		*data++ = 1.0f;     *data++ = 1.0f;    *data++ = 0.0f;
+		*data++ = 1.0f;     *data++ = 0.0f;
+
+		*data++ = 1.0f;     *data++ = -1.0f;   *data++ = 0.0f;
+		*data++ = 1.0f;     *data++ = 1.0f;
+
+		*data++ = -1.0f;    *data++ = -1.0f;   *data++ = 0.0f;
+		*data++ = 0.0f;     *data++ = 1.0f;
+	}
+	gpFullscreenQuadVB->Unlock(); // 정점버퍼가 다른 데서 사용될 수 있도록 풀어준다.
+
+	// 색인버퍼를 만든다.
 }
 
 //------------------------------------------------------------
